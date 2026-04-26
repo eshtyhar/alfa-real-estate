@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Alfa Real Estate</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary:   #1D3557;
+    --secondary: #457B9D;
+    --accent:    #D4AF37;
+    --bg:        #F1FAEE;
+    --text:      #1a1a1a;
+    --muted:     #666;
+    --card-bg:   #ffffff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--bg); color: var(--text);
+    line-height: 1.6; overflow-x: hidden;
+  }
+  h1, h2, .display { font-family: 'Playfair Display', serif; }
+  img { max-width: 100%; display: block; }
+
+  /* ===== Navbar ===== */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 1rem 5%;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  nav .logo {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700; font-size: 1.4rem;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  nav ul { display: flex; gap: 2rem; list-style: none; }
+  nav ul a {
+    text-decoration: none; color: var(--text); font-weight: 500; font-size: 0.95rem;
+    transition: color 0.3s; position: relative;
+  }
+  nav ul a::after {
+    content: ''; position: absolute; bottom: -6px; left: 0; right: 0;
+    height: 2px; background: var(--primary); transform: scaleX(0); transform-origin: right;
+    transition: transform 0.3s;
+  }
+  nav ul a:hover { color: var(--primary); }
+  nav ul a:hover::after { transform: scaleX(1); transform-origin: left; }
+  .nav-toggle { display: none; background: none; border: 0; font-size: 1.5rem; cursor: pointer; color: var(--primary); }
+
+  /* ===== Hero ===== */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    text-align: center; padding: 6rem 5% 4rem;
+    color: #fff; position: relative; overflow: hidden;
+    background:
+      linear-gradient(135deg, rgba(0,0,0,0.6), rgba(0,0,0,0.4)),
+      url('https://loremflickr.com/1600/900/realestate%2Chouse%2Cmodern?random=87606') center/cover no-repeat;
+  }
+  .hero::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+    background-size: 300% 300%;
+    animation: gradientShift 15s ease infinite;
+    opacity: 0.35; mix-blend-mode: multiply;
+  }
+  @keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50%      { background-position: 100% 50%; }
+  }
+  .hero > * { position: relative; z-index: 2; }
+  .hero h1 {
+    font-size: clamp(2.5rem, 7vw, 5rem); font-weight: 700;
+    margin-bottom: 1.5rem; letter-spacing: -0.02em;
+    text-shadow: 0 2px 30px rgba(0,0,0,0.3);
+    animation: fadeUp 1s ease;
+  }
+  .hero p {
+    font-size: clamp(1.1rem, 2.2vw, 1.5rem); max-width: 700px;
+    opacity: 0.95; margin-bottom: 2.5rem; font-weight: 300;
+    animation: fadeUp 1s ease 0.2s both;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .cta {
+    display: inline-block; padding: 1.1rem 2.8rem;
+    background: var(--accent); color: #1a1a1a;
+    font-weight: 700; font-size: 1.05rem; text-decoration: none;
+    border-radius: 50px; letter-spacing: 0.03em;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+    animation: pulse 2.5s ease-in-out infinite, fadeUp 1s ease 0.4s both;
+    transition: transform 0.3s;
+  }
+  .cta:hover { transform: scale(1.05) translateY(-2px); }
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 12px 40px rgba(0,0,0,0.25), 0 0 0 0 rgba(255,255,255,0.5); }
+    50%      { box-shadow: 0 12px 40px rgba(0,0,0,0.3), 0 0 0 22px rgba(255,255,255,0); }
+  }
+  .scroll-indicator {
+    position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+    color: #fff; font-size: 1.5rem; opacity: 0.7;
+    animation: bounce 2s ease-in-out infinite;
+  }
+  @keyframes bounce {
+    0%, 100% { transform: translate(-50%, 0); }
+    50%      { transform: translate(-50%, 12px); }
+  }
+
+  /* ===== Common section ===== */
+  section.block { padding: 6rem 5%; }
+  .container { max-width: 1200px; margin: 0 auto; }
+  .section-eyebrow {
+    text-align: center; color: var(--primary); font-size: 0.9rem;
+    text-transform: uppercase; letter-spacing: 0.2em; font-weight: 600;
+    margin-bottom: 0.8rem;
+  }
+  .section-title {
+    text-align: center; font-size: clamp(2rem, 4.5vw, 3rem);
+    font-weight: 700; margin-bottom: 0.5rem; color: var(--text);
+  }
+  .section-subtitle { text-align: center; color: var(--muted); margin-bottom: 4rem; max-width: 600px; margin-inline: auto; }
+
+  /* ===== About ===== */
+  .about-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;
+  }
+  .about-img {
+    border-radius: 16px; overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+    transition: transform 0.5s;
+  }
+  .about-img:hover { transform: scale(1.02); }
+  .about-img img { width: 100%; height: 480px; object-fit: cover; }
+  .about-text h2 { font-size: clamp(1.8rem, 3.5vw, 2.5rem); margin-bottom: 1rem; color: var(--primary); }
+  .about-text p { color: var(--muted); margin-bottom: 1rem; font-size: 1.05rem; }
+  .about-text .signature { font-family: 'Playfair Display', serif; font-style: italic; color: var(--primary); margin-top: 1rem; font-size: 1.1rem; }
+
+  /* ===== Services / Cards ===== */
+  .cards { display: grid; gap: 2rem; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+  .card {
+    background: var(--card-bg); border-radius: 16px; overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    transition: transform 0.4s, box-shadow 0.4s;
+  }
+  .card:hover { transform: translateY(-12px); box-shadow: 0 20px 50px rgba(0,0,0,0.15); }
+  .card .img-wrap { height: 220px; overflow: hidden; }
+  .card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s; }
+  .card:hover img { transform: scale(1.08); }
+  .card .body { padding: 1.8rem; }
+  .card h3 { font-size: 1.3rem; margin-bottom: 0.6rem; color: var(--primary); }
+  .card p { color: var(--muted); font-size: 0.95rem; }
+
+  /* ===== Stats ===== */
+  .stats {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: #fff; padding: 4rem 5%;
+  }
+  .stats-grid {
+    max-width: 1100px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem; text-align: center;
+  }
+  .stat-num { font-size: 3rem; font-weight: 800; color: var(--accent); display: block; margin-bottom: 0.3rem; }
+  .stat-label { font-size: 0.95rem; opacity: 0.9; text-transform: uppercase; letter-spacing: 0.08em; }
+
+  /* ===== Gallery ===== */
+  .gallery {
+    display: grid; gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+  .gallery .item {
+    border-radius: 12px; overflow: hidden; aspect-ratio: 1; position: relative;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+  }
+  .gallery .item img {
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform 0.6s, filter 0.6s;
+  }
+  .gallery .item:hover img { transform: scale(1.1); filter: brightness(0.85); }
+  .gallery .item::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    opacity: 0; transition: opacity 0.4s; mix-blend-mode: overlay;
+  }
+  .gallery .item:hover::after { opacity: 0.4; }
+
+  /* ===== Testimonials ===== */
+  .testimonials-bg { background: linear-gradient(135deg, #f8f9fb 0%, #fff 100%); }
+  .testimonial-grid {
+    display: grid; gap: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+  .testimonial {
+    background: #fff; padding: 2rem; border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    border-top: 4px solid var(--accent);
+    position: relative;
+  }
+  .testimonial::before {
+    content: '"'; position: absolute; top: -10px; left: 20px;
+    font-size: 5rem; font-family: 'Playfair Display', serif;
+    color: var(--accent); opacity: 0.3; line-height: 1;
+  }
+  .testimonial p { color: var(--text); font-style: italic; margin-bottom: 1rem; font-size: 1rem; }
+  .testimonial .author { font-weight: 600; color: var(--primary); }
+  .testimonial .stars { color: #FFD700; font-size: 1.1rem; margin-bottom: 0.5rem; }
+
+  /* ===== Contact ===== */
+  .contact-bg { background: linear-gradient(135deg, var(--secondary), var(--primary)); color: #fff; }
+  .contact-bg .section-title, .contact-bg .section-eyebrow { color: #fff; }
+  .info-row {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem; margin-top: 2rem;
+  }
+  .info {
+    background: rgba(255,255,255,0.12); padding: 1.8rem 2.2rem; border-radius: 14px;
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    min-width: 240px; text-align: center; border: 1px solid rgba(255,255,255,0.15);
+    transition: transform 0.3s, background 0.3s;
+  }
+  .info:hover { transform: translateY(-4px); background: rgba(255,255,255,0.18); }
+  .info strong { display: block; font-size: 0.8rem; opacity: 0.85; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.12em; }
+  .info a { color: #fff; text-decoration: none; font-size: 1.15rem; font-weight: 600; }
+
+  /* ===== Footer ===== */
+  footer {
+    text-align: center; padding: 2.5rem 5%;
+    background: #111; color: #aaa; font-size: 0.95rem;
+  }
+  footer strong { color: var(--accent); font-family: 'Playfair Display', serif; font-size: 1.1rem; }
+  footer .social { margin-top: 1rem; display: flex; gap: 1rem; justify-content: center; }
+  footer .social a {
+    color: #aaa; text-decoration: none; padding: 0.5rem 1rem;
+    border: 1px solid #333; border-radius: 50px;
+    transition: color 0.3s, border-color 0.3s;
+  }
+  footer .social a:hover { color: var(--accent); border-color: var(--accent); }
+
+  /* ===== Scroll-reveal ===== */
+  .reveal { opacity: 0; transform: translateY(40px); transition: all 0.9s cubic-bezier(.2,.8,.2,1); }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-left { opacity: 0; transform: translateX(-50px); transition: all 0.9s cubic-bezier(.2,.8,.2,1); }
+  .reveal-left.visible { opacity: 1; transform: translateX(0); }
+  .reveal-right { opacity: 0; transform: translateX(50px); transition: all 0.9s cubic-bezier(.2,.8,.2,1); }
+  .reveal-right.visible { opacity: 1; transform: translateX(0); }
+
+  /* ===== Mobile ===== */
+  @media (max-width: 800px) {
+    .nav-toggle { display: block; }
+    nav ul {
+      display: none; position: absolute; top: 100%; left: 0; right: 0;
+      flex-direction: column; gap: 0; padding: 1rem 5%;
+      background: #fff; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    nav ul.open { display: flex; }
+    nav ul li { padding: 0.8rem 0; border-bottom: 1px solid #eee; }
+    section.block { padding: 4rem 5%; }
+    .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .about-img img { height: 320px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Alfa Real Estate</div>
+  <button class="nav-toggle" aria-label="Toggle menu">&#9776;</button>
+  <ul id="nav-menu">
+    <li><a href="#home">Home</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Featured Listings</a></li>
+    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<header class="hero" id="home">
+  <h1>Alfa Real Estate</h1>
+  <p>From plot to possession — we handle it all.</p>
+  <a href="#contact" class="cta">Get in Touch</a>
+  <div class="scroll-indicator">&#x25BC;</div>
+</header>
+
+<!-- ===== ABOUT ===== -->
+<section class="block" id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-img reveal-left">
+        <img src="https://loremflickr.com/800/600/realestate%2Chouse%2Cmodern?random=87607" alt="About Alfa Real Estate" loading="lazy">
+      </div>
+      <div class="about-text reveal-right">
+        <div class="section-eyebrow">About Us</div>
+        <h2>Welcome to Alfa Real Estate</h2>
+        <p>For years, we've built our reputation by putting our customers first. Every detail matters — from the quality of what we deliver to the way we treat every person who walks through our door.</p>
+        <p>What started as a small local effort has grown into a trusted name across the community. But our values haven't changed: honest work, fair prices, and a personal touch in everything we do.</p>
+        <div class="signature">— The Alfa Real Estate Team</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SERVICES ===== -->
+<section class="block" id="services" style="background: rgba(0,0,0,0.02);">
+  <div class="container">
+    <div class="section-eyebrow reveal">What We Offer</div>
+    <h2 class="section-title reveal">Featured Listings</h2>
+    <p class="section-subtitle reveal">Discover what makes us the trusted choice for so many.</p>
+    <div class="cards">
+      <div class="card reveal">
+        <div class="img-wrap"><img src="https://loremflickr.com/600/400/realestate%2Chouse%2Cmodern?random=87608" alt="Premium Locations" loading="lazy"></div>
+        <div class="body">
+          <h3>Premium Locations</h3>
+          <p>Curated properties in the most sought-after neighborhoods.</p>
+        </div>
+      </div>
+      <div class="card reveal">
+        <div class="img-wrap"><img src="https://loremflickr.com/600/400/realestate%2Chouse%2Cmodern?random=87609" alt="Investment Advice" loading="lazy"></div>
+        <div class="body">
+          <h3>Investment Advice</h3>
+          <p>Expert guidance on which areas offer the best returns.</p>
+        </div>
+      </div>
+      <div class="card reveal">
+        <div class="img-wrap"><img src="https://loremflickr.com/600/400/realestate%2Chouse%2Cmodern?random=87610" alt="Trusted Reputation" loading="lazy"></div>
+        <div class="body">
+          <h3>Trusted Reputation</h3>
+          <p>Years of satisfied clients and successful transactions.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== STATS ===== -->
+<section class="stats">
+  <div class="stats-grid">
+    <div class="reveal"><span class="stat-num">500+</span><span class="stat-label">Properties Sold</span></div>
+<div class="reveal"><span class="stat-num">15+</span><span class="stat-label">Years Experience</span></div>
+<div class="reveal"><span class="stat-num">98%</span><span class="stat-label">Client Satisfaction</span></div>
+<div class="reveal"><span class="stat-num">4.9★</span><span class="stat-label">Google Rating</span></div>
+  </div>
+</section>
+
+<!-- ===== GALLERY ===== -->
+<section class="block" id="gallery">
+  <div class="container">
+    <div class="section-eyebrow reveal">A Glimpse of Our Work</div>
+    <h2 class="section-title reveal">Gallery</h2>
+    <p class="section-subtitle reveal">Take a look at what we do best.</p>
+    <div class="gallery">
+      <div class="item reveal"><img src="https://loremflickr.com/600/600/realestate%2Chouse%2Cmodern?random=87611" alt="Gallery 1" loading="lazy"></div>
+      <div class="item reveal"><img src="https://loremflickr.com/600/600/realestate%2Chouse%2Cmodern?random=87612" alt="Gallery 2" loading="lazy"></div>
+      <div class="item reveal"><img src="https://loremflickr.com/600/600/realestate%2Chouse%2Cmodern?random=87613" alt="Gallery 3" loading="lazy"></div>
+      <div class="item reveal"><img src="https://loremflickr.com/600/600/realestate%2Chouse%2Cmodern?random=87614" alt="Gallery 4" loading="lazy"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TESTIMONIALS ===== -->
+<section class="block testimonials-bg">
+  <div class="container">
+    <div class="section-eyebrow reveal">Real Voices</div>
+    <h2 class="section-title reveal">What Our Customers Say</h2>
+    <p class="section-subtitle reveal">Don't take our word for it — hear it from the people we serve.</p>
+    <div class="testimonial-grid">
+      <div class="testimonial reveal"><div class="stars">★★★★★</div><p>They found us our dream home in just two weeks. Completely trustworthy.</p><div class="author">— Fatima A.</div></div>
+<div class="testimonial reveal"><div class="stars">★★★★★</div><p>Helped me invest in Bahria Town with great returns. Professional throughout.</p><div class="author">— Asif H.</div></div>
+<div class="testimonial reveal"><div class="stars">★★★★★</div><p>Honest dealing and great after-sale support. Highly recommended.</p><div class="author">— Imran S.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CONTACT ===== -->
+<section class="block contact-bg" id="contact">
+  <div class="container">
+    <div class="section-eyebrow reveal">Reach Out</div>
+    <h2 class="section-title reveal">Visit Us / Call Us</h2>
+    <p class="section-subtitle reveal" style="color: rgba(255,255,255,0.85);">We'd love to hear from you.</p>
+    <div class="info-row reveal">
+      <div class="info">
+        <strong>Phone</strong>
+        <a href="tel:Contact for details">Contact for details</a>
+      </div>
+      <div class="info">
+        <strong>Address</strong>
+        <a href="https://www.google.com/maps/search/?api=1&query=%EE%83%88+Plot+279%2F1%2C+Sector+1+Airport+Employees+CHS%2C+Rawalpindi%2C+Pakistan" target="_blank"> Plot 279/1, Sector 1 Airport Employees CHS, Rawalpindi, Pakistan</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  &copy; <span id="year"></span> <strong>Alfa Real Estate</strong>. All rights reserved.
+  <div class="social">
+    <a href="#">Facebook</a>
+    <a href="#">Instagram</a>
+    <a href="tel:Contact for details">Call Us</a>
+  </div>
+</footer>
+
+<script>
+  // Mobile nav toggle
+  document.querySelector('.nav-toggle').addEventListener('click', () => {
+    document.getElementById('nav-menu').classList.toggle('open');
+  });
+  document.querySelectorAll('#nav-menu a').forEach(a =>
+    a.addEventListener('click', () => document.getElementById('nav-menu').classList.remove('open'))
+  );
+
+  // Scroll-reveal — Intersection Observer
+  const revealClasses = ['.reveal', '.reveal-left', '.reveal-right'];
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.12 });
+  document.querySelectorAll(revealClasses.join(',')).forEach(el => io.observe(el));
+
+  // Animated number counter for stats
+  const statNumberEls = document.querySelectorAll('.stat-num');
+  const statObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const el = entry.target;
+      if (el.dataset.animated) return;
+      el.dataset.animated = '1';
+      const finalText = el.textContent.trim();
+      const match = finalText.match(/^(\d+)(.*)$/);
+      if (!match) return;
+      const target = parseInt(match[1], 10);
+      const suffix = match[2];
+      let current = 0;
+      const step = Math.max(1, Math.ceil(target / 40));
+      const timer = setInterval(() => {
+        current += step;
+        if (current >= target) { current = target; clearInterval(timer); }
+        el.textContent = current + suffix;
+      }, 30);
+    });
+  }, { threshold: 0.5 });
+  statNumberEls.forEach(el => statObserver.observe(el));
+
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+
+</body>
+</html>
